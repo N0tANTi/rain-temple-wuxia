@@ -20,4 +20,4 @@ npm run serve
 - 拖动环视，滚轮缩放，按 **R** 重置。
 - 点击「观看短片」可在场景内自动引水、跟随镜头游览。
 
-本作沿用 Patch / Blendi 的 Watercolour 水彩渲染与角色素材。详见[来源和署名](public/CREDITS.md)与[许可证](LICENSE)。
+[署名](public/CREDITS.md)与[许可证](LICENSE)。

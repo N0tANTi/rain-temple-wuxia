@@ -1,3 +1,45 @@
+# 雨过山寺
+
+一个用 Three.js 实时渲染的武侠水彩小品。戴斗笠的旅人站在山寺廊桥旁，拨动竹槽后，水流沿石槽而下，原先的铅笔线稿逐渐染上颜色。
+
+![戴斗笠的旅人与山寺廊桥，游戏实机画面](武侠旅人实机.jpg)
+
+## 运行
+
+在仓库根目录使用 Node.js 24 和 npm 执行：
+
+```sh
+npm ci
+npm run build
+npm run serve
+```
+
+打开 <http://127.0.0.1:5483/> 即可体验。构建还会在仓库的上一级生成可双击离线运行的 **雨过山寺.html**。
+
+点击竹槽、按 E 或选择「拨动竹槽」来引水。拖动画面可环视，滚轮控制距离。按 R 重新开始。「观看短片」使用与 MP4 相同的自动引水和三段运镜。浏览器在第一次交互后开启声音。
+
+## 源码
+
+以 Blendi / Patch 的 [Watercolour](https://patch.gg/blendi/watercolour) 为基础，原作提交为 `713908667b250c35598a737503e68b72cb9a2192`。沿用原作的颜料到达时间图、纸张后处理、铅笔排线、植被笔触和待机动画。武侠旅人使用原工程附带的成人模型，另做交领衣袍、竹斗笠、带鞘佩剑与拨槽动作。廊桥和山寺布局参考同一工作区的《山寺练习》。
+
+- `src/rain-temple.js` 控制引水、镜头、操作和实时播放。
+- `src/temple.js` 生成建筑、岩石、树、石钵和檐铃。
+- `src/wayfarer.js` 生成并绑定服饰、斗笠和佩剑，控制引水时的手臂姿势。
+- `src/temple-weather.js` 生成远山、檐滴和瀑流。
+- `src/wash.js` 与 `src/page.js` 执行水彩渲染。引水沿石槽写入到达时间，廊柱从柱脚向上吸色。
+- `src/temple-sound.js` 为实时播放与短片合成雨声、滴水和铜铃。
+- [《过桥听雨》](public/audio/过桥听雨.m4a) 是为短片创作的 20 秒立体声配乐，用拨弦、气鸣和低鼓音色演奏。执行 `python tools/compose-temple.py` 可重新合成，依赖 NumPy、SciPy 与 FFmpeg。
+
+## 重新构建
+
+在此目录执行 `npm ci`，再执行 `npm run build`，会生成 `dist/` 和上一级的离线 HTML。执行 `npm run serve` 可通过本机 5483 端口预览。
+
+执行 `node tools/temple-film.mjs` 会用本机 Chrome 或 Edge 与 FFmpeg 导出 1920 × 1080、30 fps 的 MP4。`--proof` 导出抽帧并测试引水、重置和回放。可通过 `CHROME` 指定浏览器路径。
+
+原作许可证与素材来源见 [LICENSE](LICENSE)、[LICENCE-NOTES.md](LICENCE-NOTES.md) 和 [public/CREDITS.md](public/CREDITS.md)。
+
+<details><summary>Watercolour 上游工程说明</summary>
+
 ---
 kind: effect
 engine: three.js
@@ -55,3 +97,5 @@ About 4 to 6 ms a frame at 1080p on a fast desktop card, and about 4.5 s to buil
 ## Licence
 
 Code MIT, art CC0 1.0. Everything painted is made in code. The girl moves on Patch's starter man's skeleton with clips from Quaternius' Universal Animation Library and Patch's own, all CC0. Physics is Rapier (Apache-2.0). `LICENCE-NOTES.md` has every part and where it came from.
+
+</details>

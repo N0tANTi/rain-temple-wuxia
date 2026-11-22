@@ -1,27 +1,11 @@
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Watercolour</title>
-    <link rel="icon" href="data:," />
-    <style>
-      html, body { margin: 0; height: 100%; background: #f6f1e6; overflow: hidden; }
-      #view, #view canvas { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
-      #loading { position: fixed; inset: 0; display: grid; place-items: center; color: #6a6470; font: italic 18px/1.4 'Segoe Print', 'Bradley Hand', 'Comic Sans MS', cursive; }
-      /* a note in pencil at the foot of the page */
-      #caption { position: fixed; right: 5.5vh; bottom: 3.2vh; color: #6a6470; font: 2.3vh/1 'Segoe Print', 'Bradley Hand', 'Comic Sans MS', cursive; transform: rotate(-2deg); pointer-events: none; white-space: nowrap; opacity: 0.85; }
-      #caption.off { display: none; }
-      #hint { position: fixed; left: 50%; bottom: 3.4vh; transform: translateX(-50%); color: #6a6470; font: 14px/1.4 'Segoe Print', 'Bradley Hand', 'Comic Sans MS', cursive;
-        background: rgba(250, 246, 236, 0.9); padding: 6px 16px; border-radius: 3px; transition: opacity 2s; pointer-events: none; white-space: nowrap; }
-      #hint.faded { opacity: 0; }
-      #hint.off { display: none; }
-    </style>
-  </head>
-  <body>
-    <div id="view"></div>
-    <div id="loading">Sharpening a pencil</div>
-    <div id="hint">Click to look &middot; WASD move &middot; Shift sprint &middot; Space jump &middot; wheel to step back</div>
-    <script type="module" src="/src/main.js"></script>
-  </body>
-</html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="data:,"><title>雨过山寺</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f6f1e6;color:#283c39;font-family:"Microsoft YaHei",sans-serif}#view,canvas{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none}
+header,footer,#loading{position:fixed;z-index:1}header{pointer-events:none;left:clamp(16px,3vw,54px);top:clamp(16px,4vh,50px)}h1{font:500 clamp(24px,3.4vw,54px)/1.15 "STKaiti","KaiTi","SimSun",serif;letter-spacing:.13em;margin:0;text-shadow:0 0 10px #f6f1e6,0 0 5px #fff}
+footer{left:clamp(12px,3vw,54px);bottom:clamp(12px,4vh,45px);max-width:calc(100vw - 24px);background:#faf6ebeF;border-left:3px solid #914631;padding:12px 17px;box-shadow:0 3px 19px #35362d16}
+p{margin:0 0 9px;font-size:14px}nav{display:flex;align-items:center;flex-wrap:wrap;gap:7px}button{border:1px solid #8b9386;padding:6px 11px;color:#29453c;background:transparent;font:inherit;font-size:13px;cursor:pointer}button:focus-visible,button:hover{outline:2px solid #426055}#sluice{background:#31554b;color:white;border-color:#31554b}small{font-size:12px;color:#546058}
+#loading{inset:0;display:grid;place-items:center;background:#f5f0e5;z-index:3}#loading[hidden],[hidden],.capture header,.capture footer{display:none}
+</style></head><body><main id="view" aria-label="雨过山寺交互场景"></main><header><h1>雨过山寺</h1></header>
+<footer><p id="hint" aria-live="polite"></p><nav><button id="sluice">拨动竹槽 · E</button><button id="watch">观看短片</button><button id="again" hidden>重新引水 · R</button><small>拖动环视 · 滚轮缩放</small></nav></footer>
+<div id="loading" role="status">正在铺纸研色…</div><script type="module" src="./src/rain-temple.js"></script></body></html>

@@ -14,7 +14,8 @@ export async function loadMan({ base = './assets/', man = 'starter-man.glb', cli
   // onProgress(0..1): how much of the two files has arrived
   const got = [0, 0], size = [6.3e6, 19.9e6];
   const tell = (i) => (e) => { got[i] = e.loaded; if (e.total) size[i] = e.total; onProgress?.(Math.min(1, (got[0] + got[1]) / (size[0] + size[1]))); };
-  const [m, c] = await Promise.all([loader.loadAsync(base + man, tell(0)), loader.loadAsync(base + clips, tell(1))]);
+  const packed=globalThis.templeAssets;
+  const [m, c] = await Promise.all([loader.loadAsync(packed?.man ?? base + man, tell(0)), loader.loadAsync(packed?.clips ?? base + clips, tell(1))]);
   const object = m.scene;
   const meshes = [];
   object.traverse((o) => {
@@ -25,7 +26,7 @@ export async function loadMan({ base = './assets/', man = 'starter-man.glb', cli
   });
   const bones = {};
   object.traverse((o) => { if (o.isBone) bones[o.name] = o; });
-  const hands = await (await fetch(new URL('./hands-anymove.json', import.meta.url))).json();
+  const hands = packed?.hands ?? await (await fetch(new URL('./hands-anymove.json', import.meta.url))).json();
   const out = { object, meshes, bones, clips: {}, motion: {}, raw: {}, hands };
   for (const clip of c.animations) {
     out.raw[clip.name] = clip;

@@ -54,7 +54,9 @@ uniform vec3 uHaze; uniform float uHazeK;
 vec3 wcPaint(vec3 local, float D, vec2 h, float hatch, vec3 at, float age, float pool, float far, float glare) {
   float tooth = pcTooth(at);
   float graphite = pcStrokes(h.x, clamp((D - 0.26) * 1.2, 0.0, 0.55) * hatch) * (0.45 + 0.7 * tooth);
-  vec3 sketch = mix(vec3(1.0), vec3(0.36, 0.34, 0.4), graphite * 0.5);
+  float paperTone = 0.075 + 0.17 * D;
+  vec3 sketch = mix(vec3(1.0), vec3(0.54,0.53,0.50) + local * 0.27, paperTone);
+  sketch *= 1.0 - 0.70 * graphite;
   float P = smoothstep(0.0, 0.25, age), wet = 1.0 - smoothstep(0.0, 4.5, age), rim = 1.0 - smoothstep(0.04, 0.9, age);
   // no wash dries flat: big soft patches of more and less pigment
   float bloom = wcNoise(at * 0.3 + 11.0) * 0.6 + wcNoise(at * 1.3 + 2.0) * 0.4;
@@ -236,7 +238,7 @@ export function createWash({ x0 = -46, z0 = -50, size = 92, cells = 256, reach =
   const share = (s) => { for (const k of Object.keys(uniforms)) s.uniforms[k] = uniforms[k]; };
   const LIT = 'float wcLit = dot(outgoingLight, vec3(0.3333)) / max(dot(diffuseColor.rgb, vec3(0.3333)), 0.03);\n  float wcD = 1.0 - clamp(pow(wcLit, 0.8), 0.0, 1.0);\n  float wcFar = (1.0 - exp(-length(vViewPosition) * uHazeK)) * 0.9;\n  float wcGlare = pow(max(dot(-normalize(vViewPosition), directionalLights[0].direction), 0.0), 4.0) * (1.0 - exp(-length(vViewPosition) * 0.025)) * 0.14;\n';
   /** What a solid thing is painted with. always: it was painted before the page was begun (the wanderer). water: the stream. */
-  const make = ({ side = THREE.FrontSide, always = false, water = false } = {}) => {
+  const make = ({ side = THREE.FrontSide, always = false, water = false, rock = false } = {}) => {
     const m = new THREE.MeshLambertMaterial({ vertexColors: true, side });
     m.onBeforeCompile = (s) => {
       share(s);
@@ -258,6 +260,20 @@ export function createWash({ x0 = -46, z0 = -50, size = 92, cells = 256, reach =
   wcC = mix(wcC, vec3(1.0, 0.97, 0.88), wcGlint * 0.9 * smoothstep(0.0, 0.25, wcA));
   gl_FragColor = vec4(wcC, wcLine);` : `
   vec3 wcPig = diffuseColor.rgb;
+  ${rock ? `
+  vec3 p=vWorld;
+  float height=p.y;
+  float seam=wcNoise(vec3(p.x*.53,p.y*.11,p.z*.53));
+  float grain=wcNoise(p*1.8)*.62+wcNoise(p*5.4)*.38;
+  float layers=abs(fract(p.y*.46+.25*sin(p.z*.6)+.55*seam+.25*grain)-.48);
+  float fissure=1.-smoothstep(.018,.08,layers);
+  float facet=abs(fract((p.x*.3+p.z*.19)+seam*.9+height*.035)-.5);
+  float crack=(1.-smoothstep(.009,.043,facet))*smoothstep(.28,.59,grain);
+  wcPig*=.75+.33*grain-.19*fissure-.23*crack;
+  float moss=smoothstep(-3.1,-.4,height+2.3*seam)*smoothstep(.35,.68,grain);
+  wcPig=mix(wcPig,vec3(.22,.30,.18),moss*.65);
+  wcPig=mix(wcPig,vec3(.73,.81,.80),smoothstep(4.,22.,-height+2.*seam)*.83);
+  ` : ''}
   // Where the ground is grass, it is not left as a flat wash: it is gone over in short strokes, lighter and
   // yellower or darker and cooler than what is under them, each lying away from the eye as grass is drawn.
   float wcGrass = smoothstep(0.0, 0.05, wcPig.g - max(wcPig.r, wcPig.b)) * step(vRoot.w, 0.0) * (1.0 - smoothstep(16.0, 42.0, length(vViewPosition)));
@@ -408,7 +424,9 @@ export function createWash({ x0 = -46, z0 = -50, size = 92, cells = 256, reach =
       }`,
   });
 
-  return { hill, beam, px: uniforms.uPx, uniforms, paint, solid: make(), both: make({ side: THREE.DoubleSide }), always: make({ always: true }), alwaysBoth: make({ always: true, side: THREE.DoubleSide }), water: make({ water: true, side: THREE.DoubleSide }), dab, dabDepth };
+  const rock = make({always:true, rock:true, side:THREE.DoubleSide});
+  rock.customProgramCacheKey=()=> 'temple-weathered-granite';
+  return { hill, beam, px: uniforms.uPx, uniforms, paint, rock, solid: make(), both: make({ side: THREE.DoubleSide }), always: make({ always: true }), alwaysBoth: make({ always: true, side: THREE.DoubleSide }), water: make({ water: true, side: THREE.DoubleSide }), dab, dabDepth };
 }
 
 /** Collects solid pieces and makes one mesh of them. root: [x, y, z, seconds a metre] the piece takes its paint from; without one, each point from the ground it is on. */

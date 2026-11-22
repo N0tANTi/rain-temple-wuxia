@@ -17,7 +17,7 @@ import { SUN } from './glade/world.js';
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
 const TAU = Math.PI * 2, SMALL = 0.86;
 const WHITE = '#f8f2e4', SKIN = '#f8cfae', BLUE = '#4f74b4', BOOT = '#7d5232', HAIR = '#8a5630', WICKER = ['#c99a52', '#a87a3c'];
-const RED = new THREE.Color('#d6332c'), DEEP = new THREE.Color('#7f1630'), WARM = new THREE.Color('#f4683e');
+const RED = new THREE.Color('#486881'), DEEP = new THREE.Color('#28374f'), WARM = new THREE.Color('#82969d');
 
 export async function createFigure(mats, onProgress) {
   const man = await loadMan({ base: './figure/', onProgress });

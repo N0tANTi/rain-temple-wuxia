@@ -7,7 +7,6 @@ export default {
   root: here,
   base: './',
   publicDir: 'public',
-  resolve: { alias: [{ find: /^patch-block$/, replacement: `${here}lib/patch-block.js` }] },
   build: {
     target: 'es2022',
     outDir: `${here}dist`,

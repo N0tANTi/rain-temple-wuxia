@@ -19,15 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
--------------------------------------------------------------------------------
-Third-party parts
-
-Rapier, by Dimforge (Sebastien Crozet and contributors), Apache License 2.0.
-src/figure/rapier/ holds @dimforge/rapier3d-compat 0.21.0 with its licence
-(src/figure/rapier/LICENSE). https://rapier.rs
-
-three.js, MIT License, Copyright (c) 2010-2025 three.js authors. Installed by
-npm; its notice ships with the built demo as THIRD-PARTY-NOTICES.md.
-
-Patch's starter man (his skeleton only is used) and his clips (public/figure/) are CC0 1.0: see
-LICENCE-NOTES.md and public/LICENSES/CC0-1.0.txt.
